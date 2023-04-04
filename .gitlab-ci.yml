@@ -14,7 +14,7 @@ build-ci-docker:
     - docker-build
 
   script:
-    - docker build -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} --build-arg NX_FILES_DIRECTORY=${NX_DIR} .
+    - docker build -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} -f Dockerfile ${NX_DIR}
     - docker run --rm --hostname localhost.localdomain --mac-address 86:8a:dd:8d:51:a8 -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} bash -c 'lmgrd;sleep 1;nxpython --version'
 
 build-deploy:

@@ -4,14 +4,10 @@ MAINTAINER Julien ARMENGAUD <julien.armengaud@viveris.fr>
 LABEL description="Docker with NanoXplore tools"
 
 
-# Path of the directory with NanoXplore tools install files and lisence file
-ARG NX_FILES_DIRECTORY
-
-
 # Copy NanoXplore tools to docker
-COPY ${NX_FILES_DIRECTORY}/NxBase2-2.5.3.tar.gz /opt/NanoXplore/NxBase2-2.5.3.tar.gz
-COPY ${NX_FILES_DIRECTORY}/nxdesignsuite-22.3.0.2.tar.gz /opt/NanoXplore/nxdesignsuite-22.3.0.2.tar.gz
-COPY ${NX_FILES_DIRECTORY}/NXLMD-2.2-linux.tar.gz /opt/NanoXplore/NXLMD-2.2-linux.tar.gz
+COPY NxBase2-2.5.3.tar.gz /opt/NanoXplore/NxBase2-2.5.3.tar.gz
+COPY nxdesignsuite-22.3.0.2.tar.gz /opt/NanoXplore/nxdesignsuite-22.3.0.2.tar.gz
+COPY NXLMD-2.2-linux.tar.gz /opt/NanoXplore/NXLMD-2.2-linux.tar.gz
 
 
 # Decompressing  NanoXplore tools
