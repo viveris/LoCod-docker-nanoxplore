@@ -4,7 +4,7 @@ stages:
   - rm
 
 variables:
-  IMG_NAME: locod-nx
+  IMG_NAME: nx-tools
   REG_HOST: docker-registry:443/embedded
   NX_DIR: /locod/docker/nx
 
@@ -15,7 +15,7 @@ build-ci-docker:
 
   script:
     - docker build -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} -f Dockerfile ${NX_DIR}
-    - docker run --rm --hostname localhost.localdomain --mac-address 86:8a:dd:8d:51:a8 -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} bash -c 'lmgrd;sleep 1;nxpython --version'
+    - docker run --rm -u $(id -u):$(id -g) --hostname localhost.localdomain --mac-address 86:8a:dd:8d:51:a8 -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} bash -c 'lmgrd;sleep 1;nxpython --version'
 
 build-deploy:
   stage: deploy

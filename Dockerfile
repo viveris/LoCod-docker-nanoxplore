@@ -28,6 +28,7 @@ ENV PATH=/opt/NanoXplore/NXLMD/2.2/bin:$PATH
 
 # Setting up serveur license
 COPY license.lic /opt/NanoXplore/NXLMD/2.2/license.lic
+RUN chmod a+r /opt/NanoXplore/NXLMD/2.2/license.lic
 RUN 	cd /opt/NanoXplore/NXLMD/2.2/bin $$ \
 	ln -sfn x86_64_RHEL_7/lmgrd lmgrd && \
 	ln -sfn x86_64_RHEL_7/lmhostid lmhostid && \
@@ -45,8 +46,7 @@ RUN yum -y install python3 xorg-x11-xauth xorg-x11-server-utils gstreamer-plugin
 
 
 # Workdir
-WORKDIR /root
+RUN mkdir /workdir
+RUN chmod -R 777 /workdir
+WORKDIR /workdir
 
-
-# Start command
-CMD lmgrd;sleep 1;bash
