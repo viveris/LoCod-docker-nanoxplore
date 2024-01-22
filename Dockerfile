@@ -47,15 +47,29 @@ ENV     PATH=/opt/NanoXplore/NXLMD/2.2/bin:$PATH
 
 
 # Adding packages for X11 display
-RUN     yum -y update; yum clean all
-RUN     yum -y install python3 xorg-x11-xauth xorg-x11-server-utils gstreamer-plugins-base libwebp pulseaudio-libs-glib2 xcb-util-renderutil xcb-util-image xcb-util-keysyms xcb-util-wm vim-enhanced; yum clean all
+RUN     yum -y update && \
+        yum -y install python3 xorg-x11-xauth xorg-x11-server-utils gstreamer-plugins-base libwebp pulseaudio-libs-glib2 xcb-util-renderutil xcb-util-image xcb-util-keysyms xcb-util-wm vim-enhanced && \
+        yum clean all
 
 
-# Adding packages for NX Embedded tools
-RUN     yum -y install git libusbx-devel; yum clean all
+# Adding extra packages for NX Embedded tools
+RUN     yum -y install git libusbx-devel bzip2 make libtool pkgconfig autoconf texinfo libusb telnet && \
+        yum clean all
 
 
-# Conning NX Embedded tools
+# Install Automake 1.16.1 (min 1.14 requiered to build OpenOCD)
+RUN     cd /opt && \
+        curl http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz --output automake-1.16.1.tar.gz && \
+        tar -xzvf automake-1.16.1.tar.gz && \
+        rm -rf automake-1.16.1.tar.gz && \
+        cd automake-1.16.1/ && \
+        ./configure && \
+        make && \
+        make install
+ENV     ACLOCAL_PATH=/usr/share/aclocal
+
+
+# Clonning NX Embedded tools
 RUN     cd /opt && \
         git clone --recursive https://jarmengaud:YSzFPNQ5bnWx3P3Nh5Kw@gitlabext.nanoxplore.com/nx_sw_embedded/tools/nx_embedded_tools.git && \
         cd nx_embedded_tools/ext/openocd/code && \
@@ -63,9 +77,27 @@ RUN     cd /opt && \
         git submodule update --recursive
 
 
+# Install NX Embedded tools
+RUN     cd /opt/nx_embedded_tools && \
+        ./setup.sh
+RUN     mkdir -p /usr/local/share/openocd && \
+        ln -s /opt/nx_embedded_tools/ext/openocd/code/src/jtag/drivers/angie/ /usr/local/share/openocd/angie
+
+
 # Add NX Embedded tools executables to PATH
 ENV     PATH=/opt/nx_embedded_tools/py:$PATH
 ENV     NX_EMBEDDED_TOOLS_IFACE=openocd
+
+
+# Copy ARM none eabi GCC install archive to docker
+COPY    gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 /opt/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+
+
+# Install ARM none eabi GCC (add to PATH)
+RUN     cd /opt && \
+        tar -xvf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 && \
+        rm -rf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
+ENV     PATH=/opt/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH
 
 
 # Workdir
