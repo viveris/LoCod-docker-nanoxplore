@@ -29,7 +29,7 @@ RUN     chmod -R 755 /opt/NanoXplore/
 
 
 # Setting up serveur license
-RUN     cd /opt/NanoXplore/NXLMD/2.2/bin $$ \
+RUN     cd /opt/NanoXplore/NXLMD/2.2/bin && \
         ln -sfn x86_64_RHEL_7/lmgrd lmgrd && \
         ln -sfn x86_64_RHEL_7/lmhostid lmhostid && \
         ln -sfn x86_64_RHEL_7/lmstat lmstat && \
@@ -49,6 +49,23 @@ ENV     PATH=/opt/NanoXplore/NXLMD/2.2/bin:$PATH
 # Adding packages for X11 display
 RUN     yum -y update; yum clean all
 RUN     yum -y install python3 xorg-x11-xauth xorg-x11-server-utils gstreamer-plugins-base libwebp pulseaudio-libs-glib2 xcb-util-renderutil xcb-util-image xcb-util-keysyms xcb-util-wm vim-enhanced; yum clean all
+
+
+# Adding packages for NX Embedded tools
+RUN     yum -y install git libusbx-devel; yum clean all
+
+
+# Conning NX Embedded tools
+RUN     cd /opt && \
+        git clone --recursive https://jarmengaud:YSzFPNQ5bnWx3P3Nh5Kw@gitlabext.nanoxplore.com/nx_sw_embedded/tools/nx_embedded_tools.git && \
+        cd nx_embedded_tools/ext/openocd/code && \
+        git checkout master && \
+        git submodule update --recursive
+
+
+# Add NX Embedded tools executables to PATH
+ENV     PATH=/opt/nx_embedded_tools/py:$PATH
+ENV     NX_EMBEDDED_TOOLS_IFACE=openocd
 
 
 # Workdir
