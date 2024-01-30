@@ -69,19 +69,11 @@ RUN     cd /opt && \
 ENV     ACLOCAL_PATH=/usr/share/aclocal
 
 
-# Clonning NX Embedded tools
+# Install NX Embedded tools
 RUN     cd /opt && \
         git clone --recursive https://jarmengaud:YSzFPNQ5bnWx3P3Nh5Kw@gitlabext.nanoxplore.com/nx_sw_embedded/tools/nx_embedded_tools.git && \
-        cd nx_embedded_tools/ext/openocd/code && \
-        git checkout master && \
-        git submodule update --recursive
-
-
-# Install NX Embedded tools
-RUN     cd /opt/nx_embedded_tools && \
+        cd /opt/nx_embedded_tools && \
         ./setup.sh
-RUN     mkdir -p /usr/local/share/openocd && \
-        ln -s /opt/nx_embedded_tools/ext/openocd/code/src/jtag/drivers/angie/ /usr/local/share/openocd/angie
 
 
 # Add NX Embedded tools executables to PATH
