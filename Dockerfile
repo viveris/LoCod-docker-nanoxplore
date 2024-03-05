@@ -81,7 +81,7 @@ RUN     cd /opt && \
 
 
 # Add NX Embedded tools executables to PATH
-ENV     PATH=/opt/nx_embedded_tools/py:/opt/nx_embedded_tools/ext/openocd/openocd_install:$PATH
+ENV     PATH=/opt/nx_embedded_tools/py:/opt/nx_embedded_tools/ext/openocd/openocd_install/bin:$PATH
 ENV     NX_EMBEDDED_TOOLS_IFACE=openocd
 
 
