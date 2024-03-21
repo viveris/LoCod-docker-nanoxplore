@@ -10,17 +10,17 @@ ARG     NX_PERSONAL_ACCESS_TOKEN
 
 # Download NanoXplore tools to docker
 COPY    NxBase2-2.5.3.tar.gz /opt/NanoXplore/NxBase2-2.5.3.tar.gz
-COPY    nxdesignsuite-23.5.0.5.tar.gz /opt/NanoXplore/nxdesignsuite-23.5.0.5.tar.gz
+COPY    nxdesignsuite-23.5.1.2.tar.gz /opt/NanoXplore/nxdesignsuite-23.5.1.2.tar.gz
 COPY    NXLMD-2.2-linux.tar.gz /opt/NanoXplore/NXLMD-2.2-linux.tar.gz
 
 
 # Decompressing  NanoXplore tools
 RUN     cd /opt/NanoXplore && \
         tar xvf NxBase2-2.5.3.tar.gz && \
-        tar xvf nxdesignsuite-23.5.0.5.tar.gz && \
+        tar xvf nxdesignsuite-23.5.1.2.tar.gz && \
         tar xvf NXLMD-2.2-linux.tar.gz && \
         rm -rf NxBase2-2.5.3.tar.gz && \
-        rm -rf nxdesignsuite-23.5.0.5.tar.gz && \
+        rm -rf nxdesignsuite-23.5.1.2.tar.gz && \
         rm -rf NXLMD-2.2-linux.tar.gz
 
 
@@ -46,7 +46,7 @@ ENV     LM_LICENSE_FILE=/opt/NanoXplore/NXLMD/2.2/license.lic
 
 # Add NanoXplore executables to PATH
 ENV     PATH=/opt/NanoXplore/NxBase2-2.5.3/other_os/nxbase2_cli:$PATH
-ENV     PATH=/opt/NanoXplore/nxdesignsuite-23.5.0.5/bin:$PATH
+ENV     PATH=/opt/NanoXplore/nxdesignsuite-23.5.1.2/bin:$PATH
 ENV     PATH=/opt/NanoXplore/NXLMD/2.2/bin:$PATH
 
 
@@ -75,7 +75,7 @@ ENV     ACLOCAL_PATH=/usr/share/aclocal
 
 # Install NX Embedded tools
 RUN     cd /opt && \
-        git clone --recursive https://${NX_USERNAME}:${NX_PERSONAL_ACCESS_TOKEN}@gitlabext.nanoxplore.com/nx_sw_embedded/tools/nx_embedded_tools.git && \
+        git clone --recursive --branch nx_embedded_tools_v2.2.1 https://${NX_USERNAME}:${NX_PERSONAL_ACCESS_TOKEN}@gitlabext.nanoxplore.com/nx_sw_embedded/tools/nx_embedded_tools.git && \
         cd /opt/nx_embedded_tools && \
         ./setup.sh
 

@@ -19,7 +19,7 @@ In the context of the Locod project, these tools are used to generate the bitstr
 ## Dependencies
 
 To work, this dockerfile must be built in a directory with the following files:
-- `nxdesignsuite-23.5.0.5.tar.gz` : installation files of NX Design Suite (Impulse)
+- `nxdesignsuite-23.5.1.2.tar.gz` : installation files of NX Design Suite (Impulse)
 - `NxBase2-2.5.3.tar.gz` : installation files of NxBase2
 - `NXLMD-2.2-linux.tar.gz` : installation files of NXLMD
 - `license.lic` : license file with a MAC address and an hostname. <span style="color:red">These two parameters will be needed to run the docker once the image built</span>
