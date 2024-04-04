@@ -4,18 +4,17 @@ stages:
   - rm
 
 variables:
-  IMG_NAME: locod-nx
+  IMG_NAME: nx-tools
   REG_HOST: docker-registry:443/embedded
-  NX_DIR: /locod/docker/nx
+  BUILD_CONTEXT: /locod/docker/nx/
 
 build-ci-docker:
   stage: ci
   tags:
     - docker-build
-
   script:
-    - docker build -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} -f Dockerfile ${NX_DIR}
-    - docker run --rm --hostname localhost.localdomain --mac-address 86:8a:dd:8d:51:a8 -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} bash -c 'lmgrd;sleep 1;nxpython --version'
+    - docker build -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} --build-arg NX_USERNAME=${NX_USERNAME} --build-arg NX_PERSONAL_ACCESS_TOKEN=${NX_PERSONAL_ACCESS_TOKEN} -f Dockerfile ${BUILD_CONTEXT}
+    - docker run --rm -u $(id -u):$(id -g) --hostname localhost.localdomain --mac-address 86:8a:dd:8d:51:a8 -t ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} bash -c 'lmgrd;sleep 1;nxpython --version'
 
 build-deploy:
   stage: deploy
@@ -23,7 +22,6 @@ build-deploy:
     - docker-build
   only:
     - tags
-
   script:
     - docker tag ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME} ${REG_HOST}/${IMG_NAME}:$CI_COMMIT_TAG 
     - docker image tag ${REG_HOST}/${IMG_NAME}:$CI_COMMIT_TAG ${REG_HOST}/${IMG_NAME}:latest
@@ -34,6 +32,5 @@ remove-tmp-img:
   stage: rm
   tags:
     - docker-build
-
   script:
     - docker image rm ${IMG_NAME}_ci:ci-${CI_COMMIT_REF_NAME}
